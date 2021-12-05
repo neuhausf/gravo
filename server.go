@@ -206,7 +206,7 @@ func (server *Server) executeQuery(qr grafana.QueryRequest) []grafana.QueryRespo
 		go func(idx int, target grafana.Target) {
 			var qres grafana.QueryResponse
 
-			context := strings.ToLower(target.Data.Context)
+			context := strings.ToLower(target.Payload.Context)
 			if context == "prognosis" {
 				qres = server.queryPrognosis(target)
 			} else {
@@ -220,8 +220,8 @@ func (server *Server) executeQuery(qr grafana.QueryRequest) []grafana.QueryRespo
 			}
 			server.cacheMux.Unlock()
 
-			if target.Data.Name != "" {
-				qres.Target = target.Data.Name
+			if target.Payload.Name != "" {
+				qres.Target = target.Payload.Name
 			}
 
 			res[idx] = qres
@@ -242,13 +242,13 @@ func (server *Server) queryData(target grafana.Target, qr *grafana.QueryRequest)
 	}
 
 	var group string
-	if target.Data.Group != "" {
-		group = strings.ToLower(target.Data.Group)
+	if target.Payload.Group != "" {
+		group = strings.ToLower(target.Payload.Group)
 	}
 
 	var options string
-	if target.Data.Options != "" {
-		options = strings.ToLower(target.Data.Options)
+	if target.Payload.Options != "" {
+		options = strings.ToLower(target.Payload.Options)
 	}
 
 	tuples, err := server.api.QueryData(
@@ -284,8 +284,8 @@ func (server *Server) queryPrognosis(target grafana.Target) grafana.QueryRespons
 		Datapoints: []grafana.ResponseTuple{},
 	}
 
-	if target.Data.Period != "" {
-		pr, err := server.api.QueryPrognosis(target.Target, target.Data.Period)
+	if target.Payload.Period != "" {
+		pr, err := server.api.QueryPrognosis(target.Target, target.Payload.Period)
 		if err != nil {
 			log.Printf("api call failed: %v", err)
 			return qres
