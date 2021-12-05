@@ -102,10 +102,10 @@ func (t *ResponseTuple) MarshalJSON() ([]byte, error) {
 
 // Target describes a query target
 type Target struct {
-	Target string     `json:"target"`
-	RefID  string     `json:"refId"`
-	Type   string     `json:"type"`
-	Data   TargetData `json:"payload,omitempty"`
+	Target   string     `json:"target"`
+	RefID    string     `json:"refId"`
+	Type     string     `json:"type"`
+	Payload  TargetData `json:"payload,omitempty"`
 }
 
 // TargetData describes the query target details
